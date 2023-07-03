@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuang.mapper.UserMapper">
+
+    <select id="getCounts" resultType="_int">
+        select count(*) from sys_user
+    </select>
+
+    <select id="getUserByPage"  resultType="com.kuang.entity.User">
+        select * from sys_user
+        <where>
+            <if test="username != null and username != null ">
+                and username like concat ('%',#{username},'%')
+            </if>
+
+            <if test="nickname != null and nickname != null ">
+                and nickname like concat ('%',#{nickname},'%')
+            </if>
+        </where>
+        limit #{begin},#{size}
+    </select>
+
+    <insert id="addUser" parameterType="com.kuang.entity.User">
+        insert into sys_user(username,password,nickname,email,phone,address,avatar_url,role)
+        values(#{username},#{newPassword},#{nickname},#{email},#{phone},#{address},#{avatarUrl},#{role})
+    </insert>
+
+    <delete id="delUser" parameterType="_int">
+        delete from sys_user where id = #{id}
+    </delete>
+
+    <update id="updateUser" parameterType="com.kuang.entity.User">
+        update sys_user
+        set username = #{username},nickname = #{nickname},role = #{role},
+            phone = #{phone},email = #{email},address = #{address},password = #{newPassword}
+        where id = #{id}
+    </update>
+
+</mapper>

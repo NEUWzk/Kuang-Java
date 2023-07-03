@@ -1,0 +1,16 @@
+npm config set registry https://registry.npm.taobao.org
+npm i xxx -S
+
+对于前端传递的参数：
+如果是json类型，@Requsetbody 后面使用具体的类封装
+如果是get方式，也就是传递的参数包含在请求路径里，后端无脑使用Map接收
+
+
+对vue-admin-template模板进行的修改：
+1.修改utils下面的request.js
+2.vue-config.js:   lintOnSave: false,
+3.store-modules/user.js : 定义登录时携带的参数
+4.设置不同的权限名称：store/modules/user.js : getInfo函数内部,通过isadmin来赋予权限
+
+异步请求：
+Ajax能够让页面无刷新的请求数据。（只修改页面的部分数据）

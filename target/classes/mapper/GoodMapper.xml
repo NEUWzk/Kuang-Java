@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuang.mapper.GoodMapper">
+
+    <select id="getAllGoods" resultType="com.kuang.entity.GoodDTO">
+        select good.*, ANY_VALUE(good_standard.price) as price
+        from good left join good_standard
+        on good.id = good_standard.good_id where
+        good.recommend = 1 and good.is_delete = 0
+        group by id
+        order by  sales  desc
+    </select>
+
+    <select id="getGoodByID"  resultType="com.kuang.entity.Good">
+        select * from good where id = #{id}
+    </select>
+
+    <select id="getGoodStandard"  resultType="com.kuang.entity.GoodStandard">
+        select * from good_standard where good_id = #{id}
+    </select>
+
+    <select id="getAllCategory" resultType="com.kuang.entity.GoodDTO">
+<!--        select * from good-->
+<!--        <where>-->
+<!--            <if test="searchText!='' and searchText != null ">-->
+<!--                and name like concat('%',#{searchText},'%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        limit #{begin},#{size}-->
+
+        select good.*, ANY_VALUE(good_standard.price) as price
+        from good left join good_standard
+        on good.id = good_standard.good_id
+        <where>
+            <if test="searchText!='' and searchText != null ">
+                and name like concat('%',#{searchText},'%')
+            </if>
+        </where>
+        group by id
+        limit #{begin},#{size}
+    </select>
+
+
+    <select id="getCount" resultType="_int">
+        select count(*) from good
+    </select>
+
+
+    <select id="getGoods"  resultType="com.kuang.entity.Good">
+        select * from good
+        <where>
+            <if test="searchText != null and searchText != '' ">
+                and name like concat('%',#{searchText},'%')
+            </if>
+        </where>
+        limit #{begin},#{size}
+    </select>
+
+    <update id="editRecommend">
+        update good set recommend = #{recommend} where id = #{id}
+    </update>
+
+    <select id="getAllClassify" resultType="com.kuang.entity.Category">
+        select * from category
+    </select>
+
+</mapper>

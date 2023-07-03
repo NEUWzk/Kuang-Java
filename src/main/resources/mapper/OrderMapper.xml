@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuang.mapper.OrderMapper">
+
+   <insert id="commitOrder"  parameterType="com.kuang.entity.Order">
+       insert into t_order(order_no,total_price,user_id,link_user,link_phone,link_address,state,create_time)
+       values(#{orderNo},#{totalPrice},#{userId},#{linkUser},#{linkPhone},#{linkAddress},#{state},#{createTime})
+   </insert>
+
+    <select id="getOrderByID" resultType="com.kuang.entity.MyDingdan">
+        SELECT o.*, og.good_id,good.`name` as good_name, og.count, og.standard, good.imgs
+        FROM t_order o, order_goods og ,good
+        WHERE o.id = og.order_id AND o.user_id = #{userId} AND og.good_id = good.id
+        ORDER BY o.create_time DESC
+    </select>
+
+    <select id="selectIDByOrderNum" resultType="_int">
+        select id from t_order where  order_no = #{number}
+    </select>
+
+    <update id="payOrder" >
+        update t_order set state = '已支付' where order_no = #{number}
+    </update>
+
+
+    <update id="updateStoreInfo" >
+        update good_standard set store = store-#{count} where good_id = #{goodId} and value = #{standard}
+    </update>
+
+    <insert id="insertOG" parameterType="com.kuang.entity.OrderGoods">
+        insert into order_goods(order_id,good_id,count,standard)
+        values(#{orderId},#{goodId},#{count},#{standard})
+    </insert>
+
+    <select id="queryOrderId" resultType="Long">
+        select id from t_order order by id desc
+        limit 1
+    </select>
+
+    <select id="getAllOrder" resultType="com.kuang.entity.Order">
+        select * from t_order
+        <where>
+            <if test="orderNo != null and orderNo != '' ">
+                and order_no = #{orderNo}
+            </if>
+            <if test="state != null and state != '' ">
+                and `state` like concat ('%',#{state},'%')
+            </if>
+        </where>
+        limit #{begin},#{size}
+    </select>
+
+    <select id="selectByOrderNo"  resultType="com.kuang.entity.GoodDetail">
+        select good.imgs as img, good.id as goodId, good.name as goodName,og.standard as standard, good.discount as discount, gs.price as price
+        from good,order_goods og, good_standard gs, t_order o
+        WHERE o.id = og.order_id AND o.order_no = #{orderNo} AND og.good_id = good.id
+        AND gs.good_id = og.good_id AND gs.`value` = standard
+    </select>
+
+</mapper>

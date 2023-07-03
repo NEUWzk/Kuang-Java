@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuang.mapper.CartMapper">
+
+    <insert id="addToCart" parameterType="com.kuang.entity.Cart">
+        insert into cart(count,create_time,good_id,standard,user_id)
+        values(#{count},#{createTime},#{goodId},#{standard},#{userId})
+    </insert>
+
+    <select id="selectByUserId" resultType="com.kuang.entity.Dingdan">
+        select cart.*, good_standard.price,good.imgs,good.name,good.discount,good_standard.store
+        from good,cart,good_standard
+        where cart.good_id = good.id AND cart.good_id = good_standard.good_id
+          AND cart.standard = good_standard.`value`
+          AND cart.user_id = #{userId}
+        ORDER BY cart.create_time DESC
+    </select>
+
+    <delete id="removeById">
+        delete from cart where id = #{cartId}
+    </delete>
+
+
+</mapper>

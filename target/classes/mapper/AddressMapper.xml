@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuang.mapper.AddressMapper">
+    <select id="getAddressbyUserid" resultType="com.kuang.entity.Address">
+        select * from address where user_id = #{id}
+    </select>
+
+    <insert id="addAddress" parameterType="com.kuang.entity.Address">
+        insert into address(link_user,link_address,link_phone,user_id)
+        values(#{linkUser},#{linkAddress},#{linkPhone},#{userId})
+    </insert>
+
+    <delete id="deleteAddress">
+        delete from address where id = #{id}
+    </delete>
+
+
+</mapper>

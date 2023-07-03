@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuang.mapper.FileMapper">
+
+    <select id="getCount"  resultType="_int">
+        select count(*) from sys_file
+    </select>
+
+    <select id="getAllFiles"  resultType="com.kuang.entity.MyFile">
+        select * from sys_file
+        <where>
+            <if test="fileName != null and fileName != '' ">
+                and name like concat ('%',#{fileName},'%')
+            </if>
+        </where>
+        limit #{begin},#{size}
+    </select>
+
+    <delete id="delFile">
+        delete from sys_file where id = #{id}
+    </delete>
+
+    <select id="queryByName"  resultType="com.kuang.entity.MyFile">
+        select * from sys_file where md5 = #{md5}
+    </select>
+
+    <insert id="insert"  parameterType="com.kuang.entity.MyFile">
+        insert into sys_file(name,type,size,url,md5)
+        values(#{name},#{type},#{size},#{url},#{md5})
+    </insert>
+
+</mapper>
